@@ -51,3 +51,41 @@ it('passes along properties from the example', async () => {
   });
   expect(await window.happo.nextExample()).toBeFalsy();
 });
+
+it('#registerExample validates input', () => {
+  expect(() =>
+    happoStatic.registerExample({ component: 'Foo', variant: 'Bar' }),
+  ).toThrow(/Missing `render` property/);
+
+  expect(() =>
+    happoStatic.registerExample({ variant: 'Bar', render: () => {} }),
+  ).toThrow(/Missing `component` property/);
+
+  expect(() =>
+    happoStatic.registerExample({ component: 'Bar', render: () => {} }),
+  ).toThrow(/Missing `variant` property/);
+
+  expect(() =>
+    happoStatic.registerExample({
+      component: 'Bar',
+      variant: 'foo',
+      render: true,
+    }),
+  ).toThrow(/Property `render` must be a function. Got "boolean"./);
+
+  expect(() =>
+    happoStatic.registerExample({
+      component: 123,
+      variant: 'foo',
+      render: true,
+    }),
+  ).toThrow(/Property `component` must be a string. Got "number"./);
+
+  expect(() =>
+    happoStatic.registerExample({
+      component: '123',
+      variant: () => {},
+      render: true,
+    }),
+  ).toThrow(/Property `variant` must be a string. Got "function"./);
+});
