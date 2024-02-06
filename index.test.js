@@ -4,12 +4,80 @@ beforeEach(() => {
   global.window = {};
 });
 
+afterEach(() => {
+  happoStatic.reset();
+});
+
 it('#init sets up some globals', () => {
   expect(global.window.happo).toBeFalsy();
   happoStatic.init();
   expect(global.window.happo).toBeTruthy();
   expect(typeof global.window.happo.nextExample).toEqual('function');
   expect(typeof global.window.happo.init).toEqual('function');
+});
+
+describe('when happo.init is called with only option', () => {
+  it('filters examples to only the single one', async () => {
+    happoStatic.init();
+    happoStatic.registerExample({
+      component: 'Hello',
+      variant: 'red',
+      render: () => {
+        return '<div style="background-color:red">Hello</div>';
+      },
+    });
+
+    happoStatic.registerExample({
+      component: 'Hello',
+      variant: 'blue',
+      render: () => {
+        return '<div style="background-color:blue">Hello</div>';
+      },
+    });
+
+    global.window.happo.init({ only: { component: 'Hello', variant: 'blue' } });
+    expect(await global.window.happo.nextExample()).toEqual({
+      component: 'Hello',
+      variant: 'blue',
+    });
+    expect(await global.window.happo.nextExample()).toBeFalsy();
+  });
+});
+
+describe('when happo.init is called with chunk option', () => {
+  it('filters examples to the right ones', async () => {
+    happoStatic.init();
+    happoStatic.registerExample({
+      component: 'Hello',
+      variant: 'red',
+      render: () => {
+        return '<div style="background-color:red">Hello</div>';
+      },
+    });
+
+    happoStatic.registerExample({
+      component: 'Hello',
+      variant: 'blue',
+      render: () => {
+        return '<div style="background-color:blue">Hello</div>';
+      },
+    });
+
+    happoStatic.registerExample({
+      component: 'Hello',
+      variant: 'green',
+      render: () => {
+        return '<div style="background-color:green">Hello</div>';
+      },
+    });
+
+    global.window.happo.init({ chunk: { total: 3, index: 2 } });
+    expect(await global.window.happo.nextExample()).toEqual({
+      component: 'Hello',
+      variant: 'green',
+    });
+    expect(await global.window.happo.nextExample()).toBeFalsy();
+  });
 });
 
 it('can iterate over registered examples', async () => {

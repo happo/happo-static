@@ -4,9 +4,13 @@ let currentIndex = 0;
 const happoStatic = {
   init() {
     window.happo = window.happo || {};
-    window.happo.init = ({ targetName, chunk }) => {
+    window.happo.init = ({ targetName, chunk, only }) => {
       currentIndex = 0;
-      if (chunk) {
+      if (only) {
+        examples = examples.filter(
+          e => e.component === only.component && e.variant === only.variant,
+        );
+      } else if (chunk) {
         const examplesPerChunk = Math.ceil(examples.length / chunk.total);
         const startIndex = chunk.index * examplesPerChunk;
         const endIndex = startIndex + examplesPerChunk;
@@ -68,6 +72,11 @@ const happoStatic = {
     }
     examples.push(props);
   },
+
+  reset() {
+    examples = [];
+    currentIndex = 0;
+  }
 };
 
 module.exports = happoStatic;
