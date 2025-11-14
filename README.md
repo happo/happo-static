@@ -1,5 +1,17 @@
 # Introduction
 
+> **⚠️ Notice:** This package has been merged into the
+> [`happo`](https://github.com/happo/happo) package. Please install `happo`
+> instead:
+>
+> ```bash
+> npm install --save-dev happo
+> ```
+>
+> [Migration guide](https://docs.happo.io/docs/migrating-from-legacy-packages)
+
+---
+
 This library can be used to integrate with happo using your own "static"
 javascript bundle. Here's how to do it --
 
@@ -21,7 +33,7 @@ to the root of a static folder. In our example, we're using `./static`.
 module.exports = {
   apiKey: process.env.HAPPO_API_KEY,
   apiSecret: process.env.HAPPO_API_SECRET,
-  generateStaticPackage: () => ({ path: './static' }),
+  generateStaticPackage: () => ({ path: "./static" }),
 };
 ```
 
@@ -30,7 +42,7 @@ generate the package on the fly here, something like
 
 ```js
 // .happo.js
-const makeStaticPackage = require('./makeStaticPackage');
+const makeStaticPackage = require("./makeStaticPackage");
 
 module.exports = {
   apiKey: process.env.HAPPO_API_KEY,
@@ -67,21 +79,21 @@ Here's a full example:
 ```js
 // main.js
 
-const happoStatic = require('happo-static');
+const happoStatic = require("happo-static");
 
 happoStatic.init();
 
 happoStatic.registerExample({
-  component: 'Hello',
-  variant: 'red',
+  component: "Hello",
+  variant: "red",
   render: () => {
     document.body.innerHTML = '<div style="background-color:red">Hello</div>';
   },
 });
 
 happoStatic.registerExample({
-  component: 'Hello',
-  variant: 'blue',
+  component: "Hello",
+  variant: "blue",
   render: () => {
     document.body.innerHTML = '<div style="background-color:blue">Hello</div>';
   },
